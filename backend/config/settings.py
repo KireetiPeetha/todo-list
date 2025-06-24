@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework', # Django REST Framework
+    'todo',  
 ]
 
 MIDDLEWARE = [
@@ -74,8 +76,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'todo_db',             # Name of your PostgreSQL database
+        'USER': 'user',        # Your PostgreSQL username
+        'PASSWORD': 'project4321',   # Your PostgreSQL password
+        'HOST': 'localhost',           # If local DB, keep it as localhost
+        'PORT': '5432',                # Default PostgreSQL port
     }
 }
 
