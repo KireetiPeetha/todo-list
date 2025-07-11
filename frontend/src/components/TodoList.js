@@ -199,6 +199,9 @@ function TodoList() {
       <div style={{ display: 'flex', gap: '30px', justifyContent: 'center', flexWrap: 'wrap' }}>
 
         <div style={{ flex: '1 1 45%', minWidth: '300px' }}>
+          <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>
+            {editingTodo ? 'Edit Todo' : 'Add Todo'}
+          </h2>
           <AddTodoForm
             onTodoAdded={handleAddTodo}
             editingTodo={editingTodo}          // Pass the todo being edited
@@ -209,13 +212,28 @@ function TodoList() {
 
         <div style={{ flex: '1 1 45%', minWidth: '300px' }}>
           <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Your Todos</h2>
-          {todos.length === 0 ? (
-            <p style={{ textAlign: 'center', fontStyle: 'italic', color: '#666' }}>No todos found. Add some using the form!</p>
-          ) : (
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              {sortedTodos.map(todo => {
-                const createdAtDate = new Date(todo.created_at);
-                const options = {
+          {/* This new container will have the same styling as the form */}
+          <div style={{
+            padding: '20px',
+            border: '1px solid #ddd',
+            borderRadius: '8px',
+            backgroundColor: '#fff',
+            boxShadow: '1px 1px 3px rgba(0,0,0,0.05)'
+          }}>
+            {todos.length === 0 ? (
+              <p style={{ textAlign: 'center', fontStyle: 'italic', color: '#666' }}>No todos found. Add some using the form!</p>
+            ) : (
+              <ul style={{
+                listStyle: 'none',
+                padding: 0,
+                margin: 0, // Reset margin to fit nicely in the box
+                maxHeight: '65vh', // Keep the max height on the UL
+                overflowY: 'auto', // Add a vertical scrollbar when content overflows
+                paddingRight: '5px', // Add a little space for the scrollbar
+              }}>
+                {sortedTodos.map(todo => {
+                  const createdAtDate = new Date(todo.created_at);
+                  const options = {
                   weekday: 'short',
                   year: 'numeric',
                   month: 'short',
@@ -224,11 +242,11 @@ function TodoList() {
                   minute: '2-digit',
                   second: '2-digit',
                   hour12: true
-                };
-                const formattedDateTime = createdAtDate.toLocaleString('en-US', options);
+                  };
+                  const formattedDateTime = createdAtDate.toLocaleString('en-US', options);
 
-                return (
-                  <li key={todo.id} style={{
+                  return (
+                    <li key={todo.id} style={{
                     padding: '15px',
                     marginBottom: '10px',
                     backgroundColor: '#fff',
@@ -238,21 +256,21 @@ function TodoList() {
                     color: todo.completed ? '#888' : '#333',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '5px'
-                  }}>
-                    <h3 style={{ margin: '0 0 5px 0', fontSize: '1.2em' }}>{todo.title}</h3>
-                    <p style={{ margin: '0 0 10px 0', fontSize: '0.9em' }}>{todo.description}</p>
-                    <small style={{ display: 'block', fontSize: '0.8em', color: '#666' }}>
-                      Status: {todo.completed ? 'Completed' : 'Pending'}
-                    </small>
-                    {todo.created_at && (
-                      <small style={{ display: 'block', fontSize: '0.75em', color: '#888', marginTop: '5px' }}>
-                        Created: {formattedDateTime}
+                      gap: '5px'
+                    }}>
+                      <h3 style={{ margin: '0 0 5px 0', fontSize: '1.2em' }}>{todo.title}</h3>
+                      <p style={{ margin: '0 0 10px 0', fontSize: '0.9em' }}>{todo.description}</p>
+                      <small style={{ display: 'block', fontSize: '0.8em', color: '#666' }}>
+                        Status: {todo.completed ? 'Completed' : 'Pending'}
                       </small>
-                    )}
-                    <div style={{ marginTop: '10px', display: 'flex', gap: '35px',paddingLeft: '60px'}}>
-                      {!todo.completed && (
-                        <button
+                      {todo.created_at && (
+                        <small style={{ display: 'block', fontSize: '0.75em', color: '#888', marginTop: '5px' }}>
+                          Created: {formattedDateTime}
+                        </small>
+                      )}
+                      <div style={{ marginTop: '10px', display: 'flex', gap: '35px',paddingLeft: '60px'}}>
+                        {!todo.completed && (
+                          <button
                           onClick={() => handleToggleComplete(todo.id, !todo.completed)}
                           style={{
                             padding: '8px 12px',
@@ -266,12 +284,12 @@ function TodoList() {
                           }}
                           onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
                           onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
-                        >
-                          Mark as Complete
-                        </button>
-                      )}
-                      {/* NEW: Update Button */}
-                      <button
+                          >
+                            Mark as Complete
+                          </button>
+                        )}
+                        {/* NEW: Update Button */}
+                        <button
                         onClick={() => handleEditClick(todo)} // Pass the entire todo object
                         style={{
                           padding: '8px 12px',
@@ -285,11 +303,11 @@ function TodoList() {
                         }}
                         onMouseOver={(e) => e.target.style.backgroundColor = '#e0a800'}
                         onMouseOut={(e) => e.target.style.backgroundColor = '#ffc107'}
-                      >
-                        Update
-                      </button>
-                      {/* NEW: Delete button */}
-  <button
+                        >
+                          Update
+                        </button>
+                        {/* NEW: Delete button */}
+                        <button
     onClick={() => handleDeleteTodo(todo.id)} // Pass the todo's ID
     style={{
       padding: '8px 12px',
@@ -303,16 +321,17 @@ function TodoList() {
     }}
     onMouseOver={(e) => e.target.style.backgroundColor = '#c82333'}
     onMouseOut={(e) => e.target.style.backgroundColor = '#dc3545'}
-  >
-    Delete
-  </button>
+                        >
+                          Delete
+                        </button>
 
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
     </div>
